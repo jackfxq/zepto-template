@@ -1,0 +1,43 @@
+<!DOCTYPE >
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <meta id="share-enable" property="og:share-enable" name="share-enable" content="1"/>
+    <meta id="share-title" property="og:title" name="title" content="投票 | 美甲大赛实时战况，谁将夺冠你来定！"/>
+    <meta id="share-text" property="og:description" name="description" content="快来支持你喜欢的参赛作品吧！"/>
+    <meta id="share-image" property="og:image" name="image" content="https://m.meijiabang.cn/single-page/meijia-rank/images/share-img.jpg"/>
+    <meta id="share-link" property="og:url" name="share-link" content=""/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)"/>
+    <meta name="imagemode" content="force"/>
+
+    <link type="text/css" rel="stylesheet" href="//m.meijiabang.cn/css/single-page/single-page-lib.css">
+    <!-- build:inlinecss -->
+    <link type="text/css" rel="stylesheet" href="./index.css">
+    <!-- endbuild -->
+
+</head>
+<body data-page-id="">
+
+<div class="main hide">
+    <div>
+        {{num}}
+        {{ list.map(function(item,index){ }}
+        <div @click="click({{index}},{{item.tag}})">{{item.tag}}</div>
+        {{ }) }}
+    </div>
+</div>
+
+</body>
+
+
+<!-- build:inlinejs -->
+<script type='text/javascript' src='./zepto.js'></script>
+<script type='text/javascript' src='./render.js'></script>
+<script type='text/javascript' src='./index.js'></script>
+ <!--endbuild -->
+
+</html>
