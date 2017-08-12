@@ -6,10 +6,6 @@
         this._init();
     }
 
-    Render.prototype.reRender = function () {
-        this._init();
-    };
-
     /**
      * 初始化
      */
@@ -20,14 +16,15 @@
         $('[data-on]').each(function () {
             var eventStr = $(this).attr('data-on');
             var eventType = eventStr.split('-')[0].replace(/\s/g, '');
-            var event = eventStr.split('-')[1].replace(/\s/g, '').match(/(\w+)\((.+)\)/);
+            var event = eventStr.split('-')[1].replace(/\s/g, '').match(/(\w+)(.*|\((.+)\))/);
             var method = event[1];
-            var args = event.length > 2 ? event[2].split(',') : [];
+            var params = event[2].match(/\((.*)\)/) ? event[2].match(/\((.*)\)/)[1] : '';
+            var args = params.split(',');
             $(this).on(eventType, function (e) {
-                array.push(e);
+                args.push(e);
                 _this.option.methods[method].apply(this, args);
             });
-            $(this).removeAttr('data-on');
+            // $(this).removeAttr('data-on');
         })
     };
     /**
@@ -61,6 +58,7 @@
                 args.push(data[key]);//数据
             }
         }
+        console.log(ret.join('\n'));
         var renderArrayFunction = new Function(parameter.join(','), ret.join('\n'));//渲染函数
         var renderArray = renderArrayFunction.apply(this, args);
         return renderArray.join('').replace(/@(\w+)="([^"]*)"/g, 'data-on="$1-$2"');
@@ -102,6 +100,7 @@
                 str = str.slice(index + closeTag.length);//改变str字符串自身
             }
         } while (str.length);
+        console.log(ret);
         return ret
     }
 
