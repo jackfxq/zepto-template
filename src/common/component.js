@@ -7,10 +7,13 @@
         this.init('body');
     }
 
+    var currentComponent = null;
+
     Component.prototype.init = function (container) {
         var self = this;
         $(container).find('[data-component]').each(function () {
             var componentName = $(this).attr('data-component');
+            currentComponent = this;
             self.initComponent(componentName, this);
         });
 
@@ -32,12 +35,16 @@
 
     };
 
-    var currentComponent = '';
-
     Component.prototype.setStyle = function (style) {
-        if(!this.components[currentComponent].style){
-            this.components[currentComponent].style = style;
+        var currentComponentName = $(currentComponent).attr('data-component');
+        var component = this.components[currentComponentName];
+        if (component && !component.style) {
+            component.style = style;
         }
+    };
+
+    Component.prototype.getProp = function (prop) {
+        return $(currentComponent).attr('data-' + prop)
     };
 
     Component.prototype.on = function (name, callback) {
@@ -79,7 +86,6 @@
     var component = new Component();
 
     window.defineComponent = function (name, callback) {
-        currentComponent = name;
         component.components[name] = {
             init: function () {
                 callback.call(this, component);
