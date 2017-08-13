@@ -3,29 +3,41 @@
     function Component() {
         this.components = {};
         this.events = {};
-        this.init($('body'));
+        this.loadStyle = {};
+        this.init('body');
     }
 
-    Component.prototype.init = function ($container) {
-        console.log($container);
+    Component.prototype.init = function (container) {
         var self = this;
-        $container.find('[data-component]').each(function () {
+        $(container).find('[data-component]').each(function () {
             var componentName = $(this).attr('data-component');
-            self.renderComponent(componentName, $(this));
+            self.initComponent(componentName, this);
         });
 
     };
 
-    Component.prototype.renderComponent = function (componentName, $el) {
+    Component.prototype.initComponent = function (componentName, context) {
         var self = this;
         if (this.components[componentName]) {
-            this.components[componentName].init($el);
+            this.components[componentName].init.call(context);
         } else {
-            loadScript('http://' + document.domain + ':5000/component/' + componentName + '.js', function () {
-                self.components[componentName].init($el);
+            _loadScript('http://' + document.domain + ':5000/components/' + componentName + '.js', function () {
+                self.components[componentName].init.call(context);
+                if (!self.loadStyle[componentName] && self.components[componentName].style) {
+                    $('head').append('<style>' + self.components[componentName].style + '</style>');
+                    self.loadStyle[componentName] = true;
+                }
             });
         }
 
+    };
+
+    var currentComponent = '';
+
+    Component.prototype.setStyle = function (style) {
+        if(!this.components[currentComponent].style){
+            this.components[currentComponent].style = style;
+        }
     };
 
     Component.prototype.on = function (name, callback) {
@@ -41,7 +53,7 @@
         });
     };
 
-    function loadScript(url, callback) {
+    function _loadScript(url, callback) {
         var script = document.createElement("script");
         script.type = "text/javascript";
         if (typeof(callback) != "undefined") {
@@ -50,18 +62,30 @@
                     if (script.readyState == "loaded" || script.readyState == "complete") {
                         script.onreadystatechange = null;
                         callback();
+                        $(script).remove();
                     }
                 };
             } else {
                 script.onload = function () {
                     callback();
+                    $(script).remove();
                 };
             }
         }
         script.src = url;
-        document.body.appendChild(script);
+        $('body').append(script);
     }
 
-    window.Xcomponent = new Component();
+    var component = new Component();
+
+    window.defineComponent = function (name, callback) {
+        currentComponent = name;
+        component.components[name] = {
+            init: function () {
+                callback.call(this, component);
+                component.init(this);
+            }
+        };
+    }
 
 })();
