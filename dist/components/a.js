@@ -1,0 +1,1 @@
+defineComponent('a', function (component) {var el = '<div><p class="a">a</p></div>';var id = component.getProp('id');$(this).append(el);var style = '.a{color:blue}';component.setStyle(style);$(this).find('p').on('click', function () {component.emit('test', id, '2');})});

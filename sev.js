@@ -4,7 +4,7 @@
 var http = require('http');
 var serveStatic = require('serve-static');
 var finalhandler = require('finalhandler');
-var serve = serveStatic(__dirname + '/src');
+var serve = serveStatic(__dirname);
 var server = http.createServer(
     function onRequest (req, res) {
         console.log('已启动');
